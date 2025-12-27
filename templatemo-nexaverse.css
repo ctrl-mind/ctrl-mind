@@ -1814,6 +1814,8 @@ body {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.4);
   letter-spacing: 1px;
+  text-wrap: no-wrap;
+  text-wrap-mode: nowrap;
 }
 
 .footer-2 a {
