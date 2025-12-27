@@ -1754,7 +1754,8 @@ body {
 
 @media (max-width: 725px) {
 	.footer {
-		margin-top: 21%;
+		margin-top: 25%;
+    padding-bottom: 0 !important;
 	}
 }
 
