@@ -1752,6 +1752,12 @@ body {
   color: var(--secondary);
 }
 
+@media (max-width: 725px) {
+	.footer {
+		margin-top: 83px;
+	}
+}
+
 /* Responsive Design */
 @media (max-width: 992px) {
   .menu-grid {
