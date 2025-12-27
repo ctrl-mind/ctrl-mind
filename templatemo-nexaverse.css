@@ -1752,9 +1752,9 @@ body {
   color: var(--secondary);
 }
 
-.footer-2 {
+/* .footer-2 {
   display: none;
-}
+} */
 
 @media (max-width: 725px) {
 	.footer {
@@ -1808,6 +1808,7 @@ body {
   animation: fadeUp 0.5s ease-out 1.7s forwards;
   left: 50%;
   transform: translateX(-50%) !important;
+  z-index: 100000;
   }
 
   .footer-2 p {
