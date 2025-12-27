@@ -247,3 +247,159 @@ function filterGallery(category, btn) {
       }
    });
 }
+
+
+
+
+const symbols = ['🔴', '🔵', '🟢', '🟡'];
+        let history = [];
+        let patterns = {};
+        let totalRounds = 0;
+        let aiWins = 0;
+        let playerWins = 0;
+        let currentPrediction = null;
+
+        function predict() {
+            if (history.length === 0) {
+                return symbols[Math.floor(Math.random() * symbols.length)];
+            }
+
+            if (history.length === 1) {
+                return symbols[Math.floor(Math.random() * symbols.length)];
+            }
+
+            const last = history[history.length - 1];
+            const lastTwo = history.slice(-2).join('');
+            const lastThree = history.length >= 3 ? history.slice(-3).join('') : null;
+
+            let scores = { '🔴': 0, '🔵': 0, '🟢': 0, '🟡': 0 };
+
+            if (patterns[last]) {
+                for (let choice in patterns[last]) {
+                    scores[choice] += patterns[last][choice] * 2;
+                }
+            }
+
+            if (patterns[lastTwo]) {
+                for (let choice in patterns[lastTwo]) {
+                    scores[choice] += patterns[lastTwo][choice] * 3;
+                }
+            }
+
+            if (lastThree && patterns[lastThree]) {
+                for (let choice in patterns[lastThree]) {
+                    scores[choice] += patterns[lastThree][choice] * 4;
+                }
+            }
+
+            let freq = {};
+            history.forEach(h => {
+                freq[h] = (freq[h] || 0) + 1;
+            });
+            for (let s in freq) {
+                scores[s] += freq[s] * 0.5;
+            }
+
+            let maxScore = Math.max(...Object.values(scores));
+            if (maxScore === 0) {
+                return symbols[Math.floor(Math.random() * symbols.length)];
+            }
+
+            let candidates = symbols.filter(s => scores[s] === maxScore);
+            return candidates[Math.floor(Math.random() * candidates.length)];
+        }
+
+        function updatePatterns(choice) {
+            if (history.length > 0) {
+                const last = history[history.length - 1];
+                if (!patterns[last]) patterns[last] = {};
+                patterns[last][choice] = (patterns[last][choice] || 0) + 1;
+            }
+
+            if (history.length >= 2) {
+                const lastTwo = history.slice(-2).join('');
+                if (!patterns[lastTwo]) patterns[lastTwo] = {};
+                patterns[lastTwo][choice] = (patterns[lastTwo][choice] || 0) + 1;
+            }
+
+            if (history.length >= 3) {
+                const lastThree = history.slice(-3).join('');
+                if (!patterns[lastThree]) patterns[lastThree] = {};
+                patterns[lastThree][choice] = (patterns[lastThree][choice] || 0) + 1;
+            }
+        }
+
+        function showPrediction(pred) {
+            symbols.forEach((s, i) => {
+                const box = document.getElementById(`pred-${i}`);
+                box.classList.remove('predicted');
+                if (s === pred) {
+                    box.classList.add('predicted');
+                }
+            });
+        }
+
+        function play(choice) {
+            if (currentPrediction) {
+                totalRounds++;
+                
+                if (currentPrediction === choice) {
+                    aiWins++;
+                    document.getElementById('result').className = 'result lose';
+                    document.getElementById('result').textContent = `AI Wins! It predicted ${choice} correctly! 🎯`;
+                } else {
+                    playerWins++;
+                    document.getElementById('result').className = 'result win';
+                    document.getElementById('result').textContent = `You Win! AI predicted ${currentPrediction}, you chose ${choice} 🎉`;
+                }
+
+                updatePatterns(choice);
+            }
+
+            history.push(choice);
+            
+            const historyEl = document.getElementById('history');
+            const item = document.createElement('span');
+            item.className = 'history-item';
+            item.textContent = choice;
+            item.style.background = 
+                choice === '🔴' ? '#ffcdd2' :
+                choice === '🔵' ? '#bbdefb' :
+                choice === '🟢' ? '#c8e6c9' : '#fff9c4';
+            historyEl.appendChild(item);
+            historyEl.scrollLeft = historyEl.scrollWidth;
+
+            currentPrediction = predict();
+            showPrediction(currentPrediction);
+
+            document.getElementById('rounds').textContent = totalRounds;
+            document.getElementById('aiWins').textContent = aiWins;
+            document.getElementById('playerWins').textContent = playerWins;
+            
+            const rate = totalRounds > 0 ? ((aiWins / totalRounds) * 100).toFixed(0) : 0;
+            document.getElementById('winRate').textContent = rate + '%';
+        }
+
+        function reset() {
+            history = [];
+            patterns = {};
+            totalRounds = 0;
+            aiWins = 0;
+            playerWins = 0;
+            currentPrediction = null;
+
+            document.getElementById('history').innerHTML = '';
+            document.getElementById('result').className = 'result waiting';
+            document.getElementById('result').textContent = 'Make your first choice to start!';
+            document.getElementById('rounds').textContent = '0';
+            document.getElementById('aiWins').textContent = '0';
+            document.getElementById('playerWins').textContent = '0';
+            document.getElementById('winRate').textContent = '0%';
+
+            symbols.forEach((s, i) => {
+                document.getElementById(`pred-${i}`).classList.remove('predicted');
+            });
+        }
+
+        currentPrediction = predict();
+        showPrediction(currentPrediction);
