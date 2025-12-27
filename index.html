@@ -672,6 +672,17 @@
   </footer> -->
   </div>
   <script src="templatemo-nexa-scripts.js"></script>
+  <script>
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  });
+</script>
+
 </body>
 
 </html>
