@@ -1392,6 +1392,27 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 25px;
 }
+.testimonials-grid-videos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+
+    .testimonial-author {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+
+        iframe {
+            border-radius: 10px;
+        }
+    }
+}
+@media (max-width: 824px) {
+    .testimonials-grid-videos {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
 .testimonials-grid2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
