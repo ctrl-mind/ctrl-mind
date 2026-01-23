@@ -31,6 +31,9 @@ menuItems.forEach(item => {
 });
 
 function showSection(sectionId) {
+    if (sectionId === 'survey') {
+        return;
+    }
    isTransitioning = true;
 
    // First, ensure all menu items are in visible state before transitioning
